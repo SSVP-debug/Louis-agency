@@ -103,6 +103,10 @@ document.addEventListener('DOMContentLoaded', () => {
     /* --- Service Card Hover Glow Effect (Mouse Move interaction) --- */
     const cards = document.querySelectorAll('.service-card');
     cards.forEach(card => {
+        // Read data-color for customized background glow
+        const glowColor = card.getAttribute('data-color') || 'rgba(255,255,255,0.06)';
+        card.style.setProperty('--card-glow', glowColor);
+
         card.addEventListener('mousemove', e => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -113,4 +117,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    /* --- Pause endless scroller on click or touch (for mobile) --- */
+    const scrollerTracks = document.querySelectorAll('.scroller-track');
+    scrollerTracks.forEach(track => {
+        track.addEventListener('mouseenter', () => track.style.animationPlayState = 'paused');
+        track.addEventListener('mouseleave', () => track.style.animationPlayState = 'running');
+        track.addEventListener('touchstart', () => track.style.animationPlayState = 'paused');
+        track.addEventListener('touchend', () => track.style.animationPlayState = 'running');
+    });
 });

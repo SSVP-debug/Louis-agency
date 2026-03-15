@@ -560,12 +560,14 @@ body.hovering .cursor-outline {
     flex-shrink: 0;
     padding: 3rem 2rem;
     border-radius: 30px;
-    transition: all var(--transition-smooth);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
     overflow: hidden;
     /* Ensure hardware acceleration for smoother animation */
-    will-change: transform;
+    will-change: transform, height;
     transform: translateZ(0);
+    display: flex;
+    flex-direction: column;
 }
 
 .service-card::before {
@@ -575,7 +577,8 @@ body.hovering .cursor-outline {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.06), transparent 40%);
+    /* Use the data-color variable defined via JS, fallback to white */
+    background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--card-glow, rgba(255,255,255,0.06)), transparent 40%);
     opacity: 0;
     transition: opacity var(--transition-smooth);
     pointer-events: none;
@@ -587,27 +590,88 @@ body.hovering .cursor-outline {
 }
 
 .service-card:hover {
-    transform: translateY(-10px);
+    transform: translateY(-15px) scale(1.02);
     border-color: rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.03);
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.card-content {
+    position: relative;
+    z-index: 2;
+}
+
+.card-reveal {
+    position: relative;
+    z-index: 2;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.service-card:hover .card-reveal {
+    max-height: 200px;
+    opacity: 1;
+    margin-top: 1.5rem;
+}
+
+.feature-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 1.5rem;
+}
+
+.feature-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.feature-list i {
+    color: var(--accent-primary);
+    font-size: 1.1rem;
 }
 
 .service-icon {
     font-size: 2.5rem;
-    color: var(--accent-primary);
     margin-bottom: 1.5rem;
-    display: inline-block;
-    padding: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
     background: rgba(255,255,255,0.03);
     border-radius: 20px;
     border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+.service-card:hover .service-icon {
+    transform: scale(1.1) rotate(5deg);
+    background: rgba(255,255,255,0.08);
+}
+
+/* Specific icon colors based on position */
+.service-card:nth-child(1) .service-icon { color: var(--accent-primary); }
 .service-card:nth-child(2) .service-icon { color: var(--accent-secondary); }
 .service-card:nth-child(3) .service-icon { color: var(--accent-tertiary); }
 .service-card:nth-child(4) .service-icon { color: #10b981; }
 .service-card:nth-child(5) .service-icon { color: #f59e0b; }
 .service-card:nth-child(6) .service-icon { color: #ef4444; }
+
+/* In the second set, the colors need to start over */
+.service-card:nth-child(7) .service-icon { color: var(--accent-primary); }
+.service-card:nth-child(8) .service-icon { color: var(--accent-secondary); }
+.service-card:nth-child(9) .service-icon { color: var(--accent-tertiary); }
+.service-card:nth-child(10) .service-icon { color: #10b981; }
+.service-card:nth-child(11) .service-icon { color: #f59e0b; }
+.service-card:nth-child(12) .service-icon { color: #ef4444; }
 
 .service-title {
     font-size: 1.5rem;
