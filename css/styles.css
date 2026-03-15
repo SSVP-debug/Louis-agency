@@ -75,6 +75,7 @@ img {
 
 .text-gradient {
     background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-size: 200% 200%;
@@ -495,19 +496,76 @@ body.hovering .cursor-outline {
 }
 
 /* --- Services Section --- */
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+.services-scroller {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    overflow: hidden;
+    position: relative;
+    padding: 2rem 0;
     margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
+/* Add mask for fading out edges */
+.services-scroller::before,
+.services-scroller::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 15vw;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.services-scroller::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg-base) 0%, transparent 100%);
+}
+
+.services-scroller::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg-base) 0%, transparent 100%);
+}
+
+.scroller-track {
+    display: flex;
+    gap: 2rem;
+    width: max-content;
+    /* Add padding to prevent cutoffs on hover scale */
+    padding: 1rem;
+}
+
+/* Hover Pausing */
+.services-scroller:hover .scroller-top,
+.services-scroller:hover .scroller-bottom {
+    animation-play-state: paused;
+}
+
+/* Row Specific Animations */
+.scroller-top {
+    animation: scrollLeftToRight 40s linear infinite;
+}
+
+.scroller-bottom {
+    animation: scrollRightToLeft 40s linear infinite;
+}
+
+/* Base Card Styles */
+
 .service-card {
+    width: 350px;
+    flex-shrink: 0;
     padding: 3rem 2rem;
     border-radius: 30px;
     transition: all var(--transition-smooth);
     position: relative;
     overflow: hidden;
+    /* Ensure hardware acceleration for smoother animation */
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .service-card::before {
@@ -562,6 +620,31 @@ body.hovering .cursor-outline {
     color: var(--text-muted);
     position: relative;
     z-index: 2;
+}
+
+/* Scroller Animations */
+@keyframes scrollLeftToRight {
+    0% { transform: translateX(calc(-50% - 1rem)); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes scrollRightToLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-50% - 1rem)); }
+}
+
+/* Adjust layout on small screens for the scroller */
+@media (max-width: 768px) {
+    .service-card {
+        width: 300px;
+        padding: 2.5rem 1.5rem;
+    }
+    .services-scroller::before,
+    .services-scroller::after {
+        width: 5vw;
+    }
+    .scroller-top { animation-duration: 30s; }
+    .scroller-bottom { animation-duration: 30s; }
 }
 
 /* --- CTA Section --- */
