@@ -15,23 +15,65 @@ document.addEventListener('DOMContentLoaded', () => {
             cursorDot.style.left = `${posX}px`;
             cursorDot.style.top = `${posY}px`;
 
-            // Slight delay for outline via css easing wouldn't work easily with direct left/top updates,
-            // we animate it via JS requestAnimationFrame for smooth trailing.
+            // Animate outline via requestAnimationFrame for smooth trailing
             cursorOutline.animate({
                 left: `${posX}px`,
                 top: `${posY}px`
             }, { duration: 500, fill: 'forwards' });
         });
 
-        // Add hover effects on links and buttons
+        // Click micro-animation
+        window.addEventListener('mousedown', () => {
+            cursorDot.classList.add('cursor-click');
+            cursorOutline.classList.add('cursor-click');
+        });
+        window.addEventListener('mouseup', () => {
+            cursorDot.classList.remove('cursor-click');
+            cursorOutline.classList.remove('cursor-click');
+        });
+
+        // Add magnetic parallax effects on links and buttons
         const interactables = document.querySelectorAll('a, button, .service-card');
-        
         interactables.forEach(el => {
             el.addEventListener('mouseenter', () => {
                 document.body.classList.add('hovering');
+                cursorDot.classList.add('cursor-magnetic');
+                cursorOutline.classList.add('cursor-magnetic');
             });
             el.addEventListener('mouseleave', () => {
                 document.body.classList.remove('hovering');
+                cursorDot.classList.remove('cursor-magnetic');
+                cursorOutline.classList.remove('cursor-magnetic');
+                
+                // Reset parallax if it's a magnetic element
+                if (el.classList.contains('magnetic-wrap')) {
+                    el.style.transform = `translate(0px, 0px)`;
+                }
+            });
+
+            // Parallax tracking specifically for magnetic buttons
+            if (el.classList.contains('magnetic-wrap')) {
+                el.addEventListener('mousemove', (e) => {
+                    const rect = el.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    
+                    // Move the element specifically slightly towards cursor
+                    el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+                });
+            }
+        });
+        
+        // Image Reveal Cursor
+        const images = document.querySelectorAll('.about-image, .hero-visual');
+        images.forEach(img => {
+            img.addEventListener('mouseenter', () => {
+                cursorDot.classList.add('cursor-view');
+                cursorOutline.classList.add('cursor-view');
+            });
+            img.addEventListener('mouseleave', () => {
+                cursorDot.classList.remove('cursor-view');
+                cursorOutline.classList.remove('cursor-view');
             });
         });
     }
