@@ -848,7 +848,7 @@ body.hovering .cursor-outline {
 /* --- Storytelling Section --- */
 .story-section {
     position: relative;
-    height: 400vh; /* 4 steps */
+    height: 300vh; /* Reduced from 400vh for faster progression */
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     background: var(--bg-base);
@@ -873,7 +873,7 @@ body.hovering .cursor-outline {
     width: 100%;
     height: 100%;
     opacity: 0;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 0.6s ease-in-out; /* Faster bg transition */
     z-index: 0;
     pointer-events: none;
 }
@@ -896,8 +896,8 @@ body.hovering .cursor-outline {
     text-align: center;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(50px) scale(0.95);
-    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+    transform: translateY(30px) scale(0.98); /* Less travel distance */
+    transition: opacity 0.6s cubic-bezier(0.25, 1, 0.5, 1), transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), visibility 0.6s;
     z-index: 10;
 }
 
@@ -909,7 +909,7 @@ body.hovering .cursor-outline {
 
 .story-step.exit-up {
     opacity: 0;
-    transform: translateY(-50px) scale(0.95);
+    transform: translateY(-30px) scale(0.98); /* Less travel distance */
 }
 
 .story-heading {
